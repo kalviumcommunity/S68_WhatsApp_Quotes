@@ -1,17 +1,24 @@
 const express = require("express");
 const router = express.Router();
-const Whatsapp = require("./Model/Schema");
-const { error } = require("console");
 
-const create = router.post("/post", async (req, res) => {
+// const { error } = require("console");
+const Whats = require("./Model/Schema");
+
+ router.post("/post", async (req, res) => {
     try {
-        const newdata = req.body;
-        const { quote } = newdata;
-        const isexist = await Whatsapp.findOne({ quote: quote });
+        const {name,email,quote} = req.body;
+       
+        const isexist = await Whats.findOne({ name:name });
         if (isexist) {
             return res.status(400).json({ Message: "The quote already exists :(" });
         }
-        const saved = await Whatsapp.create(newdata);
+        console.log(isexist);
+        const saved = await Whats.create({
+            name:name,
+            email:email,
+            quote:quote
+
+        })
         res.status(200).json({ Message: "Successfully added the quote!" });
     } catch (err) {
         res.status(500).json({ Message: "Sorry there was an internal error", error: err });
@@ -22,7 +29,7 @@ const update = router.put("/update/:id", async (req, res) => {
     try {
         const newdata = req.body;
         const { quote } = newdata;
-        const isexist = await Whatsapp.findOne({ quote: quote });
+        const isexist = await Whats.findOne({ quote: quote });
         if (!isexist) {
             return res.status(400).json({ Message: "The quote does not exist..." });
         }
@@ -39,7 +46,7 @@ const update = router.put("/update/:id", async (req, res) => {
 const get = router.get("/fetch", async (req, res) => {
     try {
         const { quote } = req.query;
-        const isexist = await Whatsapp.findOne({ quote: quote });
+        const isexist = await Whats.findOne({ quote: quote });
         if (!isexist) {
             return res.status(400).json({ Message: "could not find!" });
         }
@@ -55,7 +62,7 @@ const get = router.get("/fetch", async (req, res) => {
 const del = router.delete("/del/:id", async (req, res) => {
     try {
         const { quote } = req.body;
-        const isexist = await Whatsapp.findOne({ quote: quote });
+        const isexist = await Whats.findOne({ quote: quote });
         if (!isexist) {
             return res.status(400).json({ Message: "The quote does not exist..." });
         }

@@ -6,4 +6,5 @@ const whatsapp = new mongoose.Schema({
     "quote": {type: String, unique: true}
 });
 
-module.exports = mongoose.model('Whatsapp', whatsapp);
+const Whats= mongoose.model('Whatsapp', whatsapp);
+module.exports =Whats
