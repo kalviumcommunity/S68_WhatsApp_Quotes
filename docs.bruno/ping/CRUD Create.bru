@@ -1,0 +1,19 @@
+meta {
+  name: CRUD Create
+  type: http
+  seq: 4
+}
+
+post {
+  url: http://localhost:3000/main/post
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name":"mayur",
+    "email":"settymayurk@gmail.com",
+    "qoute":"He said one day"
+  }
+}
