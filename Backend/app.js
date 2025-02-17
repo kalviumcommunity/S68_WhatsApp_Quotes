@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
-const router = require("./Controll");
+const router = require("../Controll");
 
 // Middleware
 app.use(bodyParser.json());

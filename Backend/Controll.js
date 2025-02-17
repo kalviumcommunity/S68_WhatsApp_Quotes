@@ -7,8 +7,7 @@ const Whats = require("./Model/Schema");
  router.post("/post", async (req, res) => {
     try {
         const {name,email,quote} = req.body;
-       
-        const isexist = await Whats.findOne({ name:name });
+        const isexist = await Whats.findOne({ quote:quote });
         if (isexist) {
             return res.status(400).json({ Message: "The quote already exists :(" });
         }

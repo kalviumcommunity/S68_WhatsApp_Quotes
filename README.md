@@ -25,4 +25,6 @@ Some **key features** I think the web-based application includes:
 
 **Why This Project:** I have no particular intention for choosing specifically this. I had multiple other ideas including "wierdest way people eat maggi", "list of pets that look like they can dominate the world", "funniest spelling mistakes shops or vendors make" and so on but I liked this idea the most as I can relate to it pretty well and its a simple enough project to make me confident to say that I can implement it by myself.
 
+**Created à Landing page** I have split the frontend and backend into two different folders and installed vite in the frontend. I also made a new page called landing.jsx where I have added a small overview about the project. The landing.jsx is rendered through app.jsx to the main page.
+
 ***depoyed link:*** https://s68-whatsapp-quotes.onrender.com
