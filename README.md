@@ -27,6 +27,9 @@ Some **key features** I think the web-based application includes:
 
 **Created à Landing page** I have split the frontend and backend into two different folders and installed vite in the frontend. I also made a new page called landing.jsx where I have added a small overview about the project. The landing.jsx is rendered through app.jsx to the main page.
 
+
+**created card rendering :** In this assignment I created a quotes.jsx which is a card component that renders in the landing page.jsx where the source of the quote and the qoute is displayed.
+
 ***depoyed link:*** https://s68-whatsapp-quotes.onrender.com
 
 **Frontend deployed link:** [asap-project-mayur](https://asap-project-mayur.netlify.app/)
