@@ -1,20 +1,42 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Quotes from '../Components/Quotes'
+import axios from 'axios'
+
 
 function Landing() {
 
-  const dummy = [{
-    source: "User",
-    quote: "cool as a cucumber"
-  },
-  {
-    source: "Me",
-    quote: "he said one day you'll leave this world behind... so live a life you will remember!"
-  },
-  {
-    source: "Friend",
-    quote: "if it breathes, it can be killed"
-  }]
+  // const dummy = [{
+  //   source: "User",
+  //   quote: "cool as a cucumber"
+  // },
+  // {
+  //   source: "Me",
+  //   quote: "he said one day you'll leave this world behind... so live a life you will remember!"
+  // },
+  // {
+  //   source: "Friend",
+  //   quote: "if it breathes, it can be killed"
+  // }]
+
+  const [Data,setData] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+        try {
+            const response = await axios.get('http://localhost:3000/main/fetchall');
+            
+            if (response.data) {
+                setData(response.data); // Store the data in state
+            } else {
+              console.log("there was an error");
+            }
+        } catch (err) {
+            console.error('Error fetching data:', err);
+        }
+    };
+
+    fetchData();
+}, []);
 
 
   return (
@@ -28,8 +50,8 @@ function Landing() {
           <br />
           <h3>Here are some quotes</h3>
           <div>
-            {dummy.map((ele) => {
-               return <Quotes source={ele.source} quote={ele.quote} />;
+            {Data.map((ele) => {
+               return <Quotes source={ele.name} quote={ele.quote} />;
             })}
           </div>
         </div>
