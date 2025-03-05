@@ -6,6 +6,10 @@ const router = require('./Controll');
 const app = express();
 const port = process.env.PORT || 3000;
 const url = process.env.db_url;
+const cors = require('cors');
+
+
+app.use(cors());
 
 app.get('/ping', (req, res) => {
   res.send('pong');

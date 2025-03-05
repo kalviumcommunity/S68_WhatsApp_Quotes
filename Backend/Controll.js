@@ -72,4 +72,14 @@ const del = router.delete("/del/:id", async (req, res) => {
     }
 });
 
+const getall = router.get("/fetchall", async (req, res) => {
+    try {
+        const all = await Whats.find();
+        console.log(all)
+        res.send(all);
+    } catch (err) {
+        res.status(500).json({ Message: "Sorry there was an internal error", error: err });
+    }
+});
+
 module.exports = router;
