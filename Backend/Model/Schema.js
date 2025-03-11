@@ -1,10 +1,9 @@
 const mongoose = require("mongoose");
 
-const whatsapp = new mongoose.Schema({
-    "name": {type: String, required: true},
-    "email": {type: String, required: true},
-    "quote": {type: String, unique: true}
+const WhatsSchema = new mongoose.Schema({
+    name: { type: String, required: true },
+    email: { type: String, required: true },
+    quote: { type: String, required: true, unique: true } 
 });
 
-const Whats= mongoose.model('Whatsapp', whatsapp);
-module.exports =Whats
+module.exports = mongoose.model("Whats", WhatsSchema);

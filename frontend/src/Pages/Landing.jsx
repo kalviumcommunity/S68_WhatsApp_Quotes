@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Quotes from '../Components/Quotes'
 import axios from 'axios'
-
+import { useNavigate } from "react-router";
 
 function Landing() {
 
@@ -19,6 +19,7 @@ function Landing() {
   // }]
 
   const [Data,setData] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -46,6 +47,9 @@ function Landing() {
         <p>
             So this is a ridiculous project as specified in the question... I find it extremely hilarious how people put up quotes on their WhatsApp descriptions. So based on the user logging in it would show a list of the top 10 quotes that I find funny or interesting. I think that I can have a pre-determined set of top 10 quotes and every time a user logs in I can randomly pick a set of 10 quotes and go through them in something like a carousel that scrolls every second revealing the quotes from 10(last) to 1(top). The purpose of this website is for people to just get a good laugh.
         </p>
+        <div>
+          <button onClick={() => navigate("/form")}>Add yours</button>
+        </div>
         <div>
           <br />
           <h3>Here are some quotes</h3>
