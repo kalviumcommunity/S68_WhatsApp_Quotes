@@ -4,27 +4,37 @@ const router = express.Router();
 // const { error } = require("console");
 const Whats = require("./Model/Schema");
 
- router.post("/post", async (req, res) => {
+router.post("/post", async (req, res) => {
     try {
-        const {name,email,quote} = req.body;
-        const isexist = await Whats.findOne({ quote:quote });
+        const { name, email, quote } = req.body;
+
+        if (!name || !email || !quote) {
+            return res.status(400).json({ Message: "All fields are required." });
+        }
+
+        const isexist = await Whats.findOne({ quote: quote.trim().toLowerCase() });
         if (isexist) {
+            console.log(isexist);
             return res.status(400).json({ Message: "The quote already exists :(" });
         }
-        console.log(isexist);
-        const saved = await Whats.create({
-            name:name,
-            email:email,
-            quote:quote
 
-        })
-        res.status(200).json({ Message: "Successfully added the quote!" });
+        const wquote = new Whats({
+            name: name,
+            email: email,
+            quote: quote
+        });
+
+        console.log(wquote);
+        await wquote.save();
+        
+        res.status(200).json({ Message: "Successfully added the quote using post req!" });
     } catch (err) {
-        res.status(500).json({ Message: "Sorry there was an internal error", error: err });
+        console.error(err);
+        res.status(500).json({ Message: "Sorry there was an internal error with the post req", error: err.message });
     }
 });
 
-const update = router.put("/update/:id", async (req, res) => {
+ router.put("/update/:id", async (req, res) => {
     try {
         const newdata = req.body;
         const { quote } = newdata;
@@ -42,7 +52,7 @@ const update = router.put("/update/:id", async (req, res) => {
     }
 });
 
-const get = router.get("/fetch", async (req, res) => {
+router.get("/fetch", async (req, res) => {
     try {
         const { quote } = req.query;
         const isexist = await Whats.findOne({ quote: quote });
@@ -58,7 +68,7 @@ const get = router.get("/fetch", async (req, res) => {
     }
 });
 
-const del = router.delete("/del/:id", async (req, res) => {
+ router.delete("/del/:id", async (req, res) => {
     try {
         const { quote } = req.body;
         const isexist = await Whats.findOne({ quote: quote });
@@ -71,8 +81,7 @@ const del = router.delete("/del/:id", async (req, res) => {
         res.status(500).json({ Message: "Sorry there was an internal error", error: err });
     }
 });
-
-const getall = router.get("/fetchall", async (req, res) => {
+router.get("/fetchall", async (req, res) => {
     try {
         const all = await Whats.find();
         console.log(all)
