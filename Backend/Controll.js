@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const UserModel = require('./Model/UserModel')
 
 // const { error } = require("console");
 const Whats = require("./Model/Schema");
@@ -34,27 +35,37 @@ router.post("/post", async (req, res) => {
     }
 });
 
- router.put("/update/:id", async (req, res) => {
+router.put("/update/:original", async (req, res) => {
     try {
-        const newdata = req.body;
-        const { quote } = newdata;
-        const isexist = await Whats.findOne({ quote: quote });
-        if (!isexist) {
-            return res.status(400).json({ Message: "The quote does not exist..." });
+        const original = req.params.original;
+        const { name, email, quote } = req.body;
+
+        const isExist = await Whats.findOne({ quote: original });
+        if (!isExist) {
+            return res.status(400).json({ message: "The quote does not exist..." });
         }
-        await Whatsapp.updateOne({ _id: req.params.id }, newdata);
-        res.status(200).json({ Message: "Successfully updated the quote!" });
+
+        const result = await Whats.updateOne(
+            { quote: original }, 
+            { $set: { name, email, quote } }
+        );
+
+        if (result.modifiedCount === 0) {
+            return res.status(400).json({ message: "No changes were made." });
+        }
+
+        res.status(200).json({ message: "Successfully updated the quote!" });
     } catch (err) {
         res.status(500).json({
-            message: "Sorry bad request",
-            error: err
+            message: "Sorry, bad request",
+            error: err.message
         });
     }
 });
 
-router.get("/fetch", async (req, res) => {
+router.get("/fetch/:original", async (req, res) => {
     try {
-        const { quote } = req.query;
+        const quote  = req.params.original;
         const isexist = await Whats.findOne({ quote: quote });
         if (!isexist) {
             return res.status(400).json({ Message: "could not find!" });
@@ -90,5 +101,60 @@ router.get("/fetchall", async (req, res) => {
         res.status(500).json({ Message: "Sorry there was an internal error", error: err });
     }
 });
+
+router.post("/signup",async (req,res)=>{
+    const { name, email, password } = req.body;
+
+    if (!name || !email || !password) {
+      return res.status(400).json({ message: "All fields are required!" });
+    }
+  
+    try {
+      const isExist = await UserModel.findOne({ email: email });
+      if (isExist) {
+        return res.status(400).json({ message: "The user already exists!" });
+      }
+  
+      const saltRounds = 10;
+      const hashedPassword = await bcrypt.hash(password, saltRounds);
+  
+      const UserMode = new UserModel({
+        name,
+        email,
+        password: hashedPassword,
+      });
+  
+      await newUser.save();
+      res.status(201).json({ message: "User created successfully!" });
+    } catch (error) {
+      res.status(500).json({ message: "Server error", error: error.message });
+    }
+})
+
+router.post('/login', async (req,res)=>{
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json({ message: 'All fields are required!' });
+    }
+  
+    try {
+      const user = await UserModel.findOne({ email: email });
+  
+      if (!user) {
+        return res.status(400).json({ message: 'User does not exist!' });
+      }
+  
+      const isMatch = await bcrypt.compare(password, user.password);
+  
+      if (!isMatch) {
+        return res.status(400).json({ message: 'Invalid email or password!' });
+      }
+  
+      res.status(200).json({ message: 'Login successful!' });
+    } catch (error) {
+      res.status(500).json({ message: 'Server error', error: error.message });
+    }
+})
 
 module.exports = router;

@@ -1,6 +1,14 @@
 import React from 'react'
+import {useNavigate} from 'react-router-dom';
+
 
 function Quotes({source, quote}) {
+  const navigate = useNavigate();
+
+  const handlenavigate = async () => {
+    navigate("/editform",{state:{quote:quote}})
+  }
+  
   const styles = {
     card: {
       border: '1px solid #ccc',
@@ -26,6 +34,9 @@ function Quotes({source, quote}) {
         <h3 style={styles.source}>{source}</h3>
         <hr />
         <p style={styles.text}>{quote}</p>
+        <div>
+          <button onClick={()=>handlenavigate()}>Edit</button>
+        </div>
     </div>
   )
 }
