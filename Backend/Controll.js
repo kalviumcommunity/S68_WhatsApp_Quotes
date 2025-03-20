@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const UserModel = require('./Model/UserModel')
+const bcrypt = require('bcrypt');
 
 // const { error } = require("console");
 const Whats = require("./Model/Schema");
@@ -118,7 +119,7 @@ router.post("/signup",async (req,res)=>{
       const saltRounds = 10;
       const hashedPassword = await bcrypt.hash(password, saltRounds);
   
-      const UserMode = new UserModel({
+      const newUser = new UserModel({
         name,
         email,
         password: hashedPassword,
@@ -156,5 +157,16 @@ router.post('/login', async (req,res)=>{
       res.status(500).json({ message: 'Server error', error: error.message });
     }
 })
+
+
+router.get("/fetchallusers", async (req, res) => {
+    try {
+        const all = await UserModel.find();
+        console.log(all)
+        res.send(all);
+    } catch (err) {
+        res.status(500).json({ Message: "Sorry there was an internal error", error: err });
+    }
+});
 
 module.exports = router;
