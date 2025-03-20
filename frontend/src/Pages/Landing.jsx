@@ -21,7 +21,7 @@ function Landing() {
 
   const [Data,setData] = useState([]);
   const [filter,setfilter] = useState("");
-  const [users,setusers] = useState([]);
+  const [users,setusers] = useState([{value:"",label:"All"}]);
 
   const navigate = useNavigate();
 
@@ -43,9 +43,9 @@ function Landing() {
     const fetchUsers = async () => {
       try {
           const userRes = await axios.get('http://localhost:3000/main/fetchallusers');
-          setusers(userRes.data.map((ele)=>{
+          setusers([{value:"",label:"All"},...userRes.data.map((ele)=>{
             return {value:ele.name, label: ele.name}
-          }));
+          })]);
       } catch (err) {
           console.error("There was an error fetching users:", err);
       }
@@ -78,7 +78,22 @@ function Landing() {
           </div>
           <div>
             <h3>filter by users</h3>
-            <Select options={users} onChange={(e)=>setfilter(e.value)}/>
+            <Select options={users} onChange={(e)=>setfilter(e.value)}     styles={{
+    control: (base) => ({
+      ...base,
+      color: "white", // Text color inside the control
+      backgroundColor: "black", // Background color of the dropdown
+    }),
+    singleValue: (base) => ({
+      ...base,
+      color: "white", // Selected text color
+    }),
+    option: (base, { isFocused, isSelected }) => ({
+      ...base,
+      color: isSelected ? "white" : "black", // Text color
+      backgroundColor: isSelected ? "blue" : isFocused ? "lightgray" : "white", // Background color on hover/select
+    }),
+  }}/>
           </div>
         </div>
     </>
