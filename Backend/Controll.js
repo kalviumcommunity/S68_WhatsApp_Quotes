@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const UserModel = require('./Model/UserModel')
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 // const { error } = require("console");
 const Whats = require("./Model/Schema");
@@ -132,7 +133,7 @@ router.post("/signup",async (req,res)=>{
     }
 })
 
-router.post('/login', async (req,res)=>{
+router.post('/login', async (req,res)=>{ //login
     const { email, password } = req.body;
 
     if (!email || !password) {
@@ -151,12 +152,36 @@ router.post('/login', async (req,res)=>{
       if (!isMatch) {
         return res.status(400).json({ message: 'Invalid email or password!' });
       }
-  
+
+      jwt.sign(email,process.env.secretkey,(err,token)=>{
+        if (err) {
+            return res.status(500).json({ success: false, message: "Error generating token" });
+        }
+
+        res.cookie("authorization", token, {
+            httpOnly: true, 
+            secure: process.env.NODE_ENV === "production", 
+            sameSite: "Strict", 
+            maxAge: 24 * 60 * 60 * 1000, 
+        })
+
+      })
+
       res.status(200).json({ message: 'Login successful!' });
     } catch (error) {
       res.status(500).json({ message: 'Server error', error: error.message });
     }
 })
+
+router.post('/logout', (req, res) => { //logout
+    res.clearCookie("authorization", {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "Strict",
+    });
+
+    res.status(200).json({ success: true, message: "Logout successful" });
+});
 
 
 router.get("/fetchallusers", async (req, res) => {
