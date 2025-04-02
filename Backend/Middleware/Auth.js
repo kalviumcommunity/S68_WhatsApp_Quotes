@@ -4,7 +4,7 @@ require('dotenv').config({path:"../.env"});
 
 const auth = (req,res,next) => {
     try{
-        const tokenauth = req.cookie.authorization;
+        const tokenauth = req.cookies.authorization;
         const secret = process.env.secretkey;
 
         if(!tokenauth){
