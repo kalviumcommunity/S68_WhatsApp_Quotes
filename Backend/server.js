@@ -7,10 +7,12 @@ const app = express();
 const port = process.env.PORT || 3000;
 const url = process.env.db_url;
 const cors = require('cors');
-const pool = require('./Database/SQLDB')
+const pool = require('./Database/SQLDB');
+const cookieParser = require('cookie-parser');
 
 app.use(express.json())
 app.use(cors());
+app.use(cookieParser());
 
 app.get('/ping', (req, res) => {
   res.send('pong');
