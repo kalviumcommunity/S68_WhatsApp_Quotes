@@ -11,11 +11,11 @@ const auth = (req,res,next) => {
             return res.status(401).json({message:"Unauthorised!"});
         }
 
-        jwt.verify(tokenauth,secret,(err,decoded)=>{
+        jwt.verify(tokenauth, secret, (err, decoded) => {
             if(err){
                 return res.status(401).json({Message:"Unauthorised!"})
             }
-            req.user = decoded.email;
+            req.user = decoded.email || decoded;
             next();
         })
     }
