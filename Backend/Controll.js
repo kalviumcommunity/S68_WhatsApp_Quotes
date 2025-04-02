@@ -3,6 +3,7 @@ const router = express.Router();
 const UserModel = require('./Model/UserModel')
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const auth = require('./Middleware/Auth')
 
 // const { error } = require("console");
 const Whats = require("./Model/Schema");
@@ -173,7 +174,7 @@ router.post('/login', async (req,res)=>{ //login
     }
 })
 
-router.post('/logout', (req, res) => { //logout
+router.post('/logout',auth, (req, res) => { //logout
     res.clearCookie("authorization", {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
